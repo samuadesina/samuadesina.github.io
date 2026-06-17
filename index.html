@@ -911,7 +911,8 @@ async function fetchR(){
       {headers:{Accept:'application/vnd.github.mercy-preview+json'}});
     if(!res.ok)throw new Error(res.status+' '+res.statusText);
     const data=await res.json();
-    allR=data.filter(r=>!r.fork).sort((a,c)=>new Date(c.updated_at)-new Date(a.updated_at));
+    allR=data.filter(r=>!r.fork && !(r.topics||[]).includes('hidden')).sort((a,c)=>new Date(c.updated_at)-new Date(a.updated_at));
+    
     const stars=allR.reduce((s,r)=>s+r.stargazers_count,0);
     document.getElementById('rCnt').textContent=allR.length;
     document.getElementById('sCnt').textContent=stars;
